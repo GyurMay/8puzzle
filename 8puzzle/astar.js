@@ -1,9 +1,3 @@
-// const fs = require("fs");
-
-// let dNode = new aStarNode;
-// dNode.gStar = dNode.hStar = dNode.fStar = 0;
-// dNode.configuration = 
-// dNode.parent = null;
 
 class aStarNode{
     constructor(){
@@ -39,11 +33,8 @@ class aStar{
         let hstar = 0;
         for (let i = 1; i < 9; ++i)
         {
-            // p("finding a's and b's",i,"\n \tlocated at:",node.configuration.indexOf(i), this.goalNode.configuration.indexOf(i));
-            
             hstar += findDis(node.configuration.indexOf(i), this.goalNode.configuration.indexOf(i));
-            // console.log("distance for ", i,"gives",findDis(node.configuration.indexOf(i), this.goalNode.configuration.indexOf(i)),"totalling",hstar," <--",node.configuration.indexOf(i), this.goalNode.configuration.indexOf(i));
-            /*hstar1(easier here)
+           /*hstar1(easier here)
                 if(node.configuration[i] != this.goalNode.configuration[i]){
                         hstar++;
                 }
@@ -99,14 +90,12 @@ class aStar{
         let tempo = this.open;
         while (temp != null){
             if(this.match(temp.configuration, currNode.configuration)){ 
-                // p("matches",temp.configuration, currNode.configuration);
                 return true;
             }
             temp = temp.next;
         }
         while(tempo != null){
             if(this.match(tempo.configuration, currNode.configuration)){
-                // p("matches",tempo.configuration, currNode.configuration);
                 return true;
             }
             tempo = tempo.next;
@@ -126,7 +115,6 @@ class aStar{
         }
         node.next = dNode.next;
         dNode.next = node;
-        // this.printList(node);
     }
     printList(head){
         let head1 = head;
@@ -156,8 +144,6 @@ class aStar{
         childList.fStar = 999;
 
         let table = createTable(c.configuration);
-        // console.log(table)
-        // p("table for", c.configuration, table)
         for(let i=0;i<9;i++){
             if(table[0][i] == 1){ //  
                 // p(i);
@@ -193,12 +179,14 @@ function p(...b){
     console.log("----------------------------------");
 }
 function findDis(i,j){
+    // could use manhattan distance with a nested for loop method here. i chose something else O(N^2) although doesn't matter anyways
+    
     let costAry = [];
     costAry[1] = ['01', '03', '12', '14', '25', '34', '36', '45', '47', '58',  '67', '78'];
     costAry[2] = ['04', '02', '15','13','20','24','35','37', "31",'46','48','57','68'];
     costAry[3] = ['07','05','18','16','27','23','38','56'];
     costAry[4] = ['08','26'];
-
+    
     let g = i > j ? i : j;
     let l = i < j ? i : j;
     let d = [];
@@ -224,39 +212,7 @@ function createTable(sc){
 }
 
 function solver(srcNodeConfig){
-// console.log(table[0][8]);
-// table[i][s[j]] = findDis(i,j);
-let sc = [0,2,8,
-          7,1,3,
-          6,4,5], 
-    gc = [1,0,2,
-          6,3,7,
-          4,8,5];
-    
-    sc = [2,8,7,
-          1,6,4,
-          3,0,5], 
-    gc = [1,2,3,
-          8,0,4,
-          7,6,5];
-
-
-    // gc = [1,2,3,
-    //    4,5,6,
-    //    7,8,0];
-    scWorking = [2,8,3,
-          1,6,4,
-          7,0,5];
-
-
-// sc = [1,2,0,4,5,3,7,8,6];
-gc = [1,2,3,4,5,6,7,8,0];
-sc = [2,8,3,1,6,4,7,0,5];
-sc = [8,7,0,2,3,6,1,4,5];
 sc = srcNodeConfig;
-// sc = scWorking;
-
-// setTimeout(()=> p("table: ",table), 1000);
 as = new aStar;
 as.startNode.configuration =  sc;
 as.goalNode.configuration  =  gc;
@@ -265,23 +221,12 @@ as.startNode.gStar = 0;
 as.startNode.hStar = as.computeHStar(as.startNode);
 as.startNode.fStar = as.startNode.gStar + as.startNode.hStar;
 as.openInsert(as.startNode);
-// console.log(as.startNode);
-
-// console.clear();
-// p("printing open");
-// as.printList(as.open);
 
 let currNode = as.startNode;
 let pathNode;
-
-for(let i=0;i<1500;i++){
-
-// while(as.isGoalNode(currNode) == false || as.open.next == null){
-    // p(i, currNode); 
-    // as.printList(as.open);
+let iterationsLimit = 1500;
+for(let i=0;i<iterationsLimit;i++){
     currNode = as.remove(as.open);
-    // p("removing from OPEN:")     
-    // currNode.printNode();
     if(currNode != null && as.isGoalNode(currNode)){
         as.closeInsert(currNode);
         pathNode = currNode;
@@ -290,11 +235,8 @@ for(let i=0;i<1500;i++){
         break;
     }
     let childList = as.constructChildList(currNode);
-    // p("printing childList");
-    // as.printList(childList);
-    // p();
+
     while(childList.next != null){
-    // if(childList.next != null){
         let child = as.remove(childList);
         child.gStar = as.computeGStar(child);
         child.hStar = as.computeHStar(child);
@@ -303,21 +245,7 @@ for(let i=0;i<1500;i++){
         as.openInsert(child);
     }
     as.closeInsert(currNode);
-    // p("printing final open");
-    // as.printList(as.open);
-
-    // p("PRINTING FINAL CLOSE");
-    // as.printList(as.close);
-    // p();p();
 }
-// let str = '', s = '';
-// while(as.close.next != null){
-//  str += '"' + as.close.configuration.join('') + '", ';
-//  s += as.close.configuration.join('');
-//  as.close = as.close.next;
-// }
-// console.clear();
-// console.log(s)
 // animate(as.close);
 console.log(pathNode);
 if(pathNode === undefined){
@@ -326,7 +254,7 @@ if(pathNode === undefined){
     return null;
 }
 
-//reset close array to store the path to final node
+//reset close LL to store the path to final node
 as.close = new aStarNode;
 as.close.gStar = as.close.fStar = "dummy";
 
@@ -337,15 +265,13 @@ if(revArr.length == 1) return revArr;
 let tmp = new aStarNode;
 tmp.configuration = gc;
 
-// revArr.push(tmp.configuration); //no need in arry only in linkedlist
 revArr.forEach(x => {
     let tmp = new aStarNode;
     tmp.configuration = x;
     as.closeInsert(tmp);
-    // tmp.printNode();
 });
 
-animate(as.close);
+// animate(as.close); // uncomment if you want to see solution "animating" in JS console.
 console.log( "final returning array",revArr);
 return revArr;
 }
@@ -353,15 +279,12 @@ return revArr;
 
 function animate(lh, i = 0){
     if(lh.next == null) return "finished";
-    // console.clear();
+    console.clear();
     console.log("\n");
     lh.printNode();
     console.log("enumeration#",i++);
     lh = lh.next;
     setTimeout(() => animate(lh, i), 1000);
 }
-// 1 0 2
-// 6 3 7
-// 4 8 5
-// a = [1,2,3,4,5,6,0,7,8];
-// solver(a);
+
+//solver([state]);
