@@ -2,8 +2,11 @@
 
 ## How to run
 ```git clone https://github.com/GyurMay/8puzzle.git```
+
 ```cd 8puzzle```
+
 For Windows Users: ```index.html```
+
 For Mac/Linux Users: ```./index.html```
 
 ### Features
