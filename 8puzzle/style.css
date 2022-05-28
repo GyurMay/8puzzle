@@ -1,0 +1,114 @@
+
+body {
+
+    font-family: arial;
+    text-align: center;
+    display: grid;
+    place-content: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    width: auto;
+    background: pink;
+}
+
+#box canvas {
+    height: 70px;
+    margin: -2.3px;
+    width: 70px;
+    position: relative;
+}
+
+#box {
+    border: 10px solid lightblue;
+    position: relative;
+    margin-top: 4em;
+    transform: scale(1.5);
+    /*! left: 3em; */
+}
+
+@keyframes slideright {
+    from {
+    }
+
+    to {
+        transform: translateX(70px);
+    }
+}
+
+#box > * {
+    z-index: 2;
+}
+.unclickable {
+    background: url('https://picsum.photos/210/210.jpg');
+}
+
+#canvas9 {
+    background-color: rgba(0,0,0,1) !important;
+    z-index: 1 !important;
+}
+
+#topMsgBox {
+    width: 210px;
+    animation: bounce 1s ease infinite;
+    font-size: 30px;
+    position: fixed;
+    z-index: 31;
+    top: 15%;
+    background: lightgreen;
+    padding: 20px;
+    border-radius: 10px;
+    place-self: center; /**ignored in mobile for somereason**/
+    display: grid; /**ignored in mobile for somereason**/
+}
+
+#topMsgBox a {
+    text-decoration: none;
+    background: cornsilk;
+    padding: 3px 4px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+@keyframes bounce {
+    from {
+    }
+
+    50% {
+        transform: translateY(10px) scaleY(0.9);
+    }
+
+    to {
+        transform: translateY(0px) scaleY(1);
+    }
+}
+
+#sidebar {
+    display: flex;
+    position: relative;
+    /*! left: 40px; */
+    width: auto;
+    top: 3px;
+    place-content: space-evenly;
+}
+button {
+    background: #d5f5e3;
+    border: 3px solid blueviolet;
+    border-radius: 6px;
+    position: relative;
+}
+button:hover, button:active{
+    background-color:purple;
+    transition: all ease-in-out 0.2s;
+}
+#sidebar > * {
+    padding: 7px;
+    float: left;
+    margin-left: 10px;
+}
+@media only screen and (max-width: 600px){
+    #topMsgBox{
+       left:18%;
+    }
+}
