@@ -15,4 +15,4 @@ For Mac/Linux Users: ```./index.html```
 3. '🧠' - let "AI" solve the problem using A* algorithm.
  
 Note: The 8-puzzle has 9!/2 states that are impossible to solve no matter how many moves are made. (https://en.wikipedia.org/wiki/15_puzzle#Solvability)
-This has by default an iterationLimit of '1500' which is tiny
+This has by default an iterationLimit of 500 which is tiny
