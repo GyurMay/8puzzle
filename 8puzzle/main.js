@@ -238,12 +238,62 @@ function gameWon() {
 	topMsgBox.innerHTML = `Time: ${ttSolve}secs <br /><br /> Lets beat this score <br /><br /> <a href="${document.location.href}">PLAY AGAIN</a>`;
 	box.innerHTML = box.innerHTML.replaceAll(/onclick=.+[0-9]\)"/g, 'onclick=""');
 }
+function findDis(i,j){
+    // could use manhattan distance with a nested for loop method here. i chose something else O(N) although doesn't matter anyways
+    
+    let costAry = [];
+    costAry[1] = ['01', '03', '12', '14', '25', '34', '36', '45', '47', '58',  '67', '78'];
+    costAry[2] = ['04', '02', '15','13','20','24','35','37', "31",'46','48','57','68'];
+    costAry[3] = ['07','05','18','16','27','23','38','56'];
+    costAry[4] = ['08','26'];
+    
+    let g = i > j ? i : j;
+    let l = i < j ? i : j;
+    let d = [];
+    let str = ''
+    if(i == j) return 0;
+    if(g-l == 6) return 2;
+    for(let l=1;l<=4;l++){
+            let givenIJ = i+''+j, givenJI = j+''+i;
+            if(costAry[l].includes(givenIJ) || costAry[l].includes(givenJI))
+                return l;
+    }
+}
+const doable = (currentState) => {
+	// find distance to missing piece parity
+	let currentBlanksPosition = currentState.findIndex(x => x === 9);
+	console.log();
+	let initToFinalParity = (findDis(currentBlanksPosition, 8) % 2) == 0; // even if true
+	// console.log(currentBlanksPosition, initToFinalParity);
+  	
+	let permutationCount = 0;
+	let finalstate = [1,2,3,4,5,6,7,8,9];
+    for(let i=0;i<9;i++){
+    	if(currentState[i] !== finalstate[i]){
+    		// swap the values
+    		let temp = currentState[i];
+    		currentState[i] = finalstate[i];
+    		currentState[finalstate[i]] = temp;
+    		permutationCount++;
+    	}
+    }
+    // console.log(permutationCount, "permutationCount")
+    return ((permutationCount %2 === 0) === initToFinalParity); //if both even then only its possible to solve
+}
+const shuffleArray = array => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
+
 function randomize() {
-	r = Math.floor(Math.random() * 9 + 1);
 	// document.getElementById("canvas9").previousElementSibling.click();
 	// autoplayLoop(0, r);
 
-	i = r;
 	i = 1;
 	arr = [];
 	arr[i++] = `<canvas id="canvas1" class="unclickable" onclick="movePiece(1)" style="background-position: 0px 0px;" width="70" height="70"></canvas>`;
@@ -256,26 +306,41 @@ function randomize() {
 	arr[i++] = `<canvas id="canvas8" class="unclickable" onclick="movePiece(8)" style="background-position: 140px 70px;" width="70" height="70"></canvas>`;
 	arr[i++] = `<canvas id="canvas9" class="unclickable" onclick="" style="background-position: 70px 70px; background-repeat: repeat !important; background-attachment: scroll !important; background-image: none !important; background-size: auto !important; background-origin: padding-box !important; background-clip: border-box !important;" width="70" height="70"></canvas>`;
 
-	filledArrays = [false, false, false, false, false, false, false, false, false];
 	boxInnerHTML = '';
 	j = 1;
+	// let currentState = [1,2,3,4,5,6,7,8,9];
+	let found = false;
+	let shuffledState = [1,2,3,4,5,6,7,9,8];
 	while(true){
-		let r = Math.floor(Math.random() * 9 + 1);
-		console.log(r);
-		if (j >= 10) break;
-		if (filledArrays[r] != true) {
-			if (j == 3 || j == 6) {
-				boxInnerHTML += arr[r] + '<br />\n';
-			} else {
-				boxInnerHTML += arr[r] + '\n';
-			}
-			j++;
-			filledArrays[r] = true;
+		shuffledState.sort((a, b) => 0.5 - Math.random());
+		// let shuffledState = shuffleArray(currentState);
+		console.log("trying ",shuffledState);
+		let copyState = [...shuffledState];
+		// isDoable = doable(copyState);
+		if(doable(copyState)){
+			console.log("current shuffledState is doable:", [...shuffledState]);
+			let c = 0;
+			[...shuffledState].forEach(x => {
+			// for(let thisIndex=0;thisIndex<9; thisIndex++){
+				let thisIndex = [...shuffledState].findIndex(y => y === x);
+				console.log("x: ",x, "thisIndex:",thisIndex+1)
+				// if(c++ < 9){
+
+				boxInnerHTML += arr[x] + '\n';
+				if (thisIndex+1 == 3 || thisIndex+1 == 6) {
+					boxInnerHTML += '<br />\n';
+				}
+
+			// console.log(x, boxInnerHTML);
+				// }
+			});
+			console.log(boxInnerHTML);
+			document.querySelector("#box").innerHTML = boxInnerHTML;
+			break;
 		}
 	}
-	console.log(boxInnerHTML);
-	box.innerHTML = boxInnerHTML;
 }
+
 function autoplayLoop(i, r) {
 	if (i >= r) return;
 	rId = Math.floor(Math.random() * 9 + 1);
