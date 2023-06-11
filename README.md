@@ -16,3 +16,5 @@ For Mac/Linux Users: ```./index.html```
  
 Note: The 8-puzzle has 9!/2 states that are impossible to solve no matter how many moves are made. (https://en.wikipedia.org/wiki/15_puzzle#Solvability)
 This has by default an iterationLimit of 500 which is tiny
+
+### LIVE LINK: https://dorjeelama.fly.dev/8puzzle
